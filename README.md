@@ -1,25 +1,31 @@
-## Header Validation Toolkit
+# Header Validation Toolkit
 
-This toolkit is designed to ensure your headers are working as intended through a proxy.
+This toolkit is designed to ensure your headers are working as intended through a proxy. It's also designed as an acceptance test endpoint to ensure your expectations are met. Everyone loves acceptance tests.
 
-### Endpoints
+## Expectations and Intentions
 
-* `/`
-  * Echoes the headers the app received through the proxy.
-  * Does not set any headers.
-* `/diff`
-  * Compares a target header file against the headers received through the proxy.
+This toolkit has two core concepts: _intentions_ and _expectations_, both of which solve different problems.
 
-### Usage
+### Exceptions
 
-1. `go build -v -o hs header-server/header-server.go`
-1. `./hs -header-ref target-file.json`
+When working with complicated, non-centralized proxy configurations, it's often hard to ensure configuration expectations are met, especially in high-compliance scenarios. To ensure expectations are met, this toolkit has an endpoint to provide header validations.
 
-### Expectation Header File
+| Endpoint | Use |
+| --- |--- |
+| `/expect` | Used for viewing the current headers. |
+| `/expect/diff` | See the difference between your expect file and what is deployed. |
 
-Because it's hard to compare lots of different headers, it's generally best to copy the `header-reference.json` file and then put in values you care about.
+#### Expectation Header File
 
-### Expected Behaviour with Diffs
+The tookit support an expectation file, which is a reference file for how headers should look after passing through your proxy. This file is designed to be based off your acceptance criteria tests, so whatever you want your target headers to look like, this file should reflect that. Here is the current file format:
+
+```json
+{
+  "header-field-name": ["header-field-value-0"]
+}
+```
+
+#### Expected Behaviour with Expectation Diffs
 
 By default, the `header-reference.json` file only contains registered HTTP/1.1 header fields, but vendors love to put custom fields in their requests.
 
@@ -77,4 +83,26 @@ Go's header parsing implementation is RFC-compliant, but in reality it doesn't a
 ]
 ```
 
-So this is expected behaviour.
+So this is expected behaviour. If there is no diff between your expected headers and the diff, you'll see `HTTP/1.1 418 I'm a teapot`. Why? It was difficult to find a way to express when there is no diff, so being a teapot is so ridiculous that it can't possibly be a proxy that sets it.
+
+### Intentions
+
+While ensuring expectations are met, it's important to validate intentions are also met. This toolkit also provides a way to set headers and then generate a diff against reality.
+
+| Endpoint | Use |
+| --- |--- |
+| `/intent` | Used for viewing the headers you intended to set. |
+| `/intent/diff` | See the difference between your intent file and what is actually seen. |
+
+#### Expected Behaviour for Intention Diffs
+
+The behaviour should be identical to the expectations functionality.
+
+## Use
+
+1. `go build -v -o hs header-server/header-server.go`
+1. `./hs -header-ref target-file.json`
+
+Optionally,
+
+1. `cf push`
