@@ -17,7 +17,7 @@ When working with complicated, non-centralized proxy configurations, it's often 
 
 #### Expectation Header File
 
-The tookit support an expectation file, which is a reference file for how headers should look after passing through your proxy. This file is designed to be based off your acceptance criteria tests, so whatever you want your target headers to look like, this file should reflect that. Here is the current file format:
+The toolkit supports an expectation file, which is a reference file for how headers should look after passing through your proxy. This file is designed to be based off your acceptance criteria tests, so whatever you want your target headers to look like, this file should reflect that. Here is the current file format:
 
 ```json
 {
