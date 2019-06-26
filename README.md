@@ -1,3 +1,5 @@
+# This has been moved under [18F/cg-laboratory](https://github.com/18f/cg-laboratory) to keep things in one place.
+
 # Header Validation Toolkit
 
 This toolkit is designed to ensure your headers are working as intended through a proxy. It's also designed as an acceptance test endpoint to ensure your expectations are met. Everyone loves acceptance tests.
